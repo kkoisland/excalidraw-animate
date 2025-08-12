@@ -1,70 +1,42 @@
-import { useState } from 'react';
-import AnimateApp from './AnimateApp';
-import ExcalidrawApp from './ExcalidrawApp';
 
-import type { AppState, BinaryFiles } from '@excalidraw/excalidraw/types';
-import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types';
+import "./index.css";
 
-const STORAGE_KEY = 'excalidraw-app';
-
-const loadFromStorage = ():
-  | { elements: ExcalidrawElement[]; appState: AppState; files: BinaryFiles }
-  | undefined => {
-  try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '');
-    data.appState.collaborators = new Map();
-    data.scrollToContent = true;
-    return data;
-  } catch {
-    return undefined;
-  }
-};
-
-const saveToStorage = (data: {
-  elements: readonly ExcalidrawElement[];
-  appState: AppState;
-  files: BinaryFiles;
-}) => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {
-    // ignore
-  }
-};
-
-type ViewMode = 'animate' | 'excalidraw';
-
-const App = () => {
-  const [mode, setMode] = useState<ViewMode>('animate');
-
-  const toggleMode = () => {
-    setMode((prev) => (prev === 'animate' ? 'excalidraw' : 'animate'));
-  };
+export default function App() {
 
   return (
-    <div>
-      <button
-        onClick={toggleMode}
-        style={{
-          position: 'absolute',
-          top: 1,
-          left: 1,
-          fontSize: 8,
-          zIndex: 10,
-        }}
-      >
-        {mode === 'animate' ? 'Edit' : 'Animate'}
-      </button>
-      {mode === 'animate' ? (
-        <AnimateApp initialData={loadFromStorage()} />
-      ) : (
-        <ExcalidrawApp
-          initialData={loadFromStorage()}
-          onChangeData={(data) => saveToStorage(data)}
-        />
-      )}
+    <div style={{ padding: 12 }}>
+      {/* First row */}
+      <div style={{ display: "flex", "alignItems": "center", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
+        <button className="app-button">Load File</button>
+        <span style={{ alignSelf: "center" }}>OR</span>
+        <button className="app-button">Load Library</button>
+        <span style={{ alignSelf: "center" }}>OR</span>
+
+        <form style={{ display: "flex", gap: 8 }}>
+          <input
+            className="Input"
+            placeholder="Enter link..."
+            value=""
+          />
+          <button
+            type="submit"
+            className="app-button"
+            disabled
+          >
+            Animate!
+          </button>
+        </form>
+      </div>
+
+      {/* second row */}
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <button className="app-button">Play (P)</button>
+        <button className="app-button">Step (S)</button>
+        <button className="app-button">Reset (R)</button>
+        <button className="app-button">Hide Toolbar (Q)</button>
+        <button className="app-button">Export to SVG</button>
+        <button className="app-button">Prepare WebM</button>
+      </div>
     </div>
   );
-};
-
-export default App;
+}

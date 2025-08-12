@@ -1,3 +1,48 @@
+/* Under .excalidraw, variables from @excalidraw/excalidraw/index.css take precedence.
+   This is a fallback to keep the same appearance for the outer DOM. */
+/* === Excalidraw tokens bridge (light defaults) === */
+:root {
+  --ui-font: Assistant, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+
+  /* sizes / radii */
+  --border-radius-lg: 0.5rem;
+  --lg-button-size: 2.25rem;
+  --lg-icon-size: 1rem;
+  --default-button-size: 2rem;
+  --default-icon-size: 1rem;
+
+  /* surfaces / text */
+  --color-surface-high: #f1f0ff;
+  --color-surface-mid:  #f6f6f9;
+  --color-surface-low:  #ececf4;
+  --color-surface-lowest: #ffffff;
+  --color-on-surface: #1b1b1f;
+
+  /* primary / brand */
+  --color-primary: #6965db;
+  --color-primary-darker: #5b57d1;
+  --color-primary-darkest: #4a47b1;
+  --color-primary-light: #e3e2fe;
+  --color-primary-light-darker: #d7d5ff;
+  --color-primary-hover: #5753d0;
+  --color-on-primary-container: #030064;
+  --color-brand-active: #4440bf;
+  --color-brand-hover: #5753d0;
+
+  /* inputs / borders */
+  --input-bg-color: #ffffff;
+  --input-border-color: #ced4da;
+  --default-border-color: var(--color-surface-high);
+
+  /* interaction */
+  --button-hover-bg: var(--color-surface-high);
+  --button-active-bg: var(--color-surface-high);
+  --button-active-border: var(--color-brand-active);
+
+  /* spacing */
+  --space-factor: 0.25rem;
+}
+
 body {
   margin: 0;
   font-family:
@@ -50,3 +95,58 @@ code {
     display: none;
   }
 }
+
+
+/* Style from Excalidraw's ToolIcon / Library buttons.
+   Matches colors, size, and border radius to reproduce the same appearance in the outer DOM. */
+.app-button {
+  height: var(--lg-button-size);
+  padding: .625rem;
+  line-height: 0;
+
+  border: none; /* Excalidraw often uses a 1px outline shadow instead of a border */
+  border-radius: var(--border-radius-lg);
+  color: var(--color-on-surface);
+  box-shadow: 0 0 0 1px var(--color-surface-lowest);
+
+  font-family: var(--ui-font);
+  font-size: .75rem;
+  letter-spacing: .4px;
+  cursor: pointer;
+}
+
+.app-button[disabled],
+.app-button[aria-disabled="true"] {
+  opacity: 0.5;
+  border-color: var(--ui-border, #d1d1d1);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.app-button:hover  { background: var(--button-hover-bg); }
+.app-button:active { background: var(--button-active-bg); }
+
+/* Primary button style (not used in current sample, kept for future use) */
+.app-button--primary {
+  color: var(--color-on-primary-container);
+  border: none;
+  box-shadow: 0 0 0 1px var(--color-brand-active);
+}
+.app-button--primary:hover  { background: var(--color-primary-hover); }
+.app-button--primary:active { box-shadow: 0 0 0 1px var(--button-active-border); }
+
+/* Matches Excalidraw's text input style for consistent appearance */
+.Input {
+  height: var(--lg-button-size); /* Match the height of .app-button */
+  box-sizing: border-box;                
+  border: 1.5px solid var(--input-border-color);
+  border-radius: var(--space-factor);
+  font-size: .75rem;                        /* Same font size as .app-button */
+}
+
+.Input:not(:focus):hover { border-color: var(--color-brand-hover); }
+.Input:focus {
+  outline: none;
+  border-color: var(--color-brand-hover);
+}
+
