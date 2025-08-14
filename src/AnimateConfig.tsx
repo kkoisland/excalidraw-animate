@@ -143,52 +143,74 @@ export const AnimateConfig = ({
     saveAnimateOption('pointerWidth', e.target.value);
   };
 
-  return (
-    <div>
-      <div style={{ opacity: animateOrderDisabled ? 0.3 : 1.0 }}>
-        Animate order:{' '}
-        {animateOrderSet.size > 1 ? (
-          <>(mixed)</>
-        ) : (
-          <input
-            disabled={animateOrderDisabled}
-            value={
-              (animateOrderSet.size === 1 &&
-                animateOrderSet.values().next().value) ||
-              0
-            }
-            onChange={onChangeAnimateOrder}
-            type="number"
-            style={{ width: 40 }}
-          />
-        )}
-      </div>
-      <div style={{ opacity: animateDurationDisabled ? 0.3 : 1.0 }}>
-        Animate duration (ms):{' '}
-        {animateDurationSet.size > 1 ? (
-          <>(mixed)</>
-        ) : (
-          <input
-            disabled={animateDurationDisabled}
-            value={
-              (animateDurationSet.size === 1 &&
-                animateDurationSet.values().next().value) ||
-              ''
-            }
-            onChange={onChangeAnimateDuration}
-            placeholder="Default"
-            style={{ width: 50 }}
-          />
-        )}
-      </div>
-      <div>
-        Animate pointer:{' '}
+  const Group = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <section style={{ display: 'grid', gap: '0.5rem', margin: '0.75rem 0' }}>
+    <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600 }}>{title}</h3>
+    {children}
+  </section>
+);
+
+const Row = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div style={{ display: 'grid', gap: '0.25rem' }}>
+    <label style={{ fontSize: '0.85rem', fontWeight: 500 }}>{label}</label>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+      {children}
+    </div>
+  </div>
+);
+
+return (
+  <div style={{ display: 'grid', gap: '1rem' }}>
+    <Group title="Animation">
+      <Row label="Animate order">
+        <div style={{ opacity: animateOrderDisabled ? 0.3 : 1.0 }}>
+          {animateOrderSet.size > 1 ? (
+            <>(mixed)</>
+          ) : (
+            <input
+              disabled={animateOrderDisabled}
+              value={
+                (animateOrderSet.size === 1 &&
+                  animateOrderSet.values().next().value) ||
+                0
+              }
+              onChange={onChangeAnimateOrder}
+              type="number"
+              style={{ width: 40 }}
+            />
+          )}
+        </div>
+      </Row>
+
+      <Row label="Animate duration (ms)">
+        <div style={{ opacity: animateDurationDisabled ? 0.3 : 1.0 }}>
+          {animateDurationSet.size > 1 ? (
+            <>(mixed)</>
+          ) : (
+            <input
+              disabled={animateDurationDisabled}
+              value={
+                (animateDurationSet.size === 1 &&
+                  animateDurationSet.values().next().value) ||
+                ''
+              }
+              onChange={onChangeAnimateDuration}
+              placeholder="Default"
+              style={{ width: 50 }}
+            />
+          )}
+        </div>
+      </Row>
+    </Group>
+
+    <Group title="Pointer">
+      <Row label="Animate pointer (URL / File)">
         <input
           defaultValue={defaultAnimateOptions.pointerImg || ''}
           onChange={onChangeAnimatePointerText}
           placeholder="URL..."
           style={{ width: 50 }}
-        />{' '}
+        />
         <label>
           <input
             type="file"
@@ -198,17 +220,17 @@ export const AnimateConfig = ({
           />
           File
         </label>
-      </div>
-      <div>
-        (Pointer width:{' '}
+      </Row>
+
+      <Row label="Pointer width">
         <input
           defaultValue={defaultAnimateOptions.pointerWidth || ''}
           onChange={onChangeAnimatePointerWidth}
           placeholder="Num..."
           style={{ width: 50 }}
         />
-        )
-      </div>
-    </div>
-  );
+      </Row>
+    </Group>
+  </div>
+);
 };
