@@ -145,15 +145,15 @@ export const AnimateConfig = ({
 
   const Group = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section style={{ display: 'grid', gap: '0.5rem', margin: '0.75rem 0' }}>
-    <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600 }}>{title}</h3>
+    <h3 style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>{title}</h3>
     {children}
   </section>
 );
 
 const Row = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div style={{ display: 'grid', gap: '0.25rem' }}>
-    <label style={{ fontSize: '0.85rem', fontWeight: 500 }}>{label}</label>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+    <label style={{ fontSize: 14, fontWeight: 500 }}>{label}</label>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
       {children}
     </div>
   </div>
@@ -162,30 +162,34 @@ const Row = ({ label, children }: { label: string; children: React.ReactNode }) 
 return (
   <div style={{ display: 'grid', gap: '1rem' }}>
     <Group title="Animation">
-      <Row label="Animate order">
-        <div style={{ opacity: animateOrderDisabled ? 0.3 : 1.0 }}>
+      <Row label="Order">
+        <div style={{ opacity: animateOrderDisabled ? 0.3 : 1 }}>
           {animateOrderSet.size > 1 ? (
-            <>(mixed)</>
+            <span style={{ opacity: 0.5 }}>
+              (Mixed values – cannot edit)
+            </span>
           ) : (
             <input
               disabled={animateOrderDisabled}
               value={
                 (animateOrderSet.size === 1 &&
-                  animateOrderSet.values().next().value) ||
-                0
+                  animateOrderSet.values().next().value) || 0
               }
               onChange={onChangeAnimateOrder}
               type="number"
-              style={{ width: 40 }}
+              className="app-input"
+              style={{ width: 100, minWidth: 100 }}
             />
           )}
         </div>
       </Row>
 
-      <Row label="Animate duration (ms)">
+      <Row label="Duration (ms)">
         <div style={{ opacity: animateDurationDisabled ? 0.3 : 1.0 }}>
           {animateDurationSet.size > 1 ? (
-            <>(mixed)</>
+            <span style={{ opacity: 0.5 }}>
+              (Mixed values – cannot edit)
+            </span>
           ) : (
             <input
               disabled={animateDurationDisabled}
@@ -204,30 +208,37 @@ return (
     </Group>
 
     <Group title="Pointer">
-      <Row label="Animate pointer (URL / File)">
+      <Row label="Source (URL / File)">
         <input
           defaultValue={defaultAnimateOptions.pointerImg || ''}
           onChange={onChangeAnimatePointerText}
-          placeholder="URL..."
-          style={{ width: 50 }}
+          placeholder="Enter URL or click File..."
+          className="app-input"
+          style={{ flex: '1 1 auto' }}
         />
-        <label>
+
+        <label
+          className="app-button"
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
+          File...
           <input
             type="file"
             accept="image/*"
             onChange={onChangeAnimatePointerFile}
-            style={{ width: 0 }}
+            style={{ display: 'none' }}
           />
-          File
         </label>
       </Row>
 
-      <Row label="Pointer width">
+      <Row label="Width">
         <input
           defaultValue={defaultAnimateOptions.pointerWidth || ''}
           onChange={onChangeAnimatePointerWidth}
-          placeholder="Num..."
-          style={{ width: 50 }}
+          placeholder="e.g. 24"
+          className="app-input"
+          style={{ width: 100, minWidth: 100 }}
+          inputMode="numeric"
         />
       </Row>
     </Group>
