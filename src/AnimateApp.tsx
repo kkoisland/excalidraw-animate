@@ -14,8 +14,7 @@ const AnimateApp = ({
     | undefined;
   theme:  'light' | 'dark';
 }) => {
-  console.log('AnimateApp theme is :', theme);
-  const { loading, loadedSvgList, loadDataList } = useLoadSvg(initialData);
+  const { loading, loadedSvgList, loadDataList } = useLoadSvg(initialData, theme);
   if (loading) {
     return <div style={{ margin: '3px 3px 3px 40px' }}>Loading...</div>;
   }

@@ -31,6 +31,7 @@ export const useLoadSvg = (
   initialData:
     | { elements: ExcalidrawElement[]; appState: AppState; files: BinaryFiles }
     | undefined,
+  theme: 'light' | 'dark',  
 ) => {
   const [loading, setLoading] = useState(true);
   const [loadedSvgList, setLoadedSvgList] = useState<
@@ -57,11 +58,24 @@ export const useLoadSvg = (
         pointerWidth: searchParams.get('pointerWidth') || undefined,
         pointerHeight: searchParams.get('pointerHeight') || undefined,
       };
+
+      // Convert black tones to near-white in dark mode to maintain contrast
+      const blackList = ['#000', '#000000', '#1e1e1e', 'black'];
+      const toLightColorIfBlack = (c?: string) =>
+        blackList.includes(c?.toLowerCase() ?? '') ? '#e0e0e0' : c;
+
       const svgList = await Promise.all(
         dataList.map(async (data) => {
           const elements = getNonDeletedElements(data.elements);
+          const elementsForExport = theme === 'dark'
+            ? elements.map((el) => ({
+                ...el,
+                strokeColor: toLightColorIfBlack(el.strokeColor),
+                backgroundColor: toLightColorIfBlack(el.backgroundColor),
+              }))
+            : elements;
           const svg = await exportToSvg({
-            elements,
+            elements: elementsForExport,
             files: data.files,
             appState: {
               ...data.appState,
@@ -80,7 +94,7 @@ export const useLoadSvg = (
       setLoadedSvgList(svgList);
       return svgList;
     },
-    [],
+    [theme],
   );
 
   useEffect(() => {
