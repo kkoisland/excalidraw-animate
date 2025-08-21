@@ -36,7 +36,8 @@ export const useLoadSvg = (
   const [loading, setLoading] = useState(true);
   const [loadedSvgList, setLoadedSvgList] = useState<
     {
-      svg: SVGSVGElement;
+      svg: SVGSVGElement; // For Viewer
+      rawSvg: SVGSVGElement; // For Export
       finishedMs: number;
     }[]
   >([]);
@@ -67,28 +68,43 @@ export const useLoadSvg = (
       const svgList = await Promise.all(
         dataList.map(async (data) => {
           const elements = getNonDeletedElements(data.elements);
-          const elementsForExport = theme === 'dark'
-            ? elements.map((el) => ({
-                ...el,
-                strokeColor: toLightColorIfBlack(el.strokeColor),
-                backgroundColor: toLightColorIfBlack(el.backgroundColor),
-              }))
-            : elements;
-          const svg = await exportToSvg({
-            elements: elementsForExport,
+
+          // 1. Export SVG without any theme adjustments (original colors)
+          const rawSvg = await exportToSvg({
+            elements, // original
             files: data.files,
-            appState: {
-              ...data.appState,
-              exportBackground: false,
-            },
+            appState: data.appState,
             exportPadding: 30,
           });
-          const result = animateSvg(svg, elements, options);
-          console.log(svg);
+
+          const result = animateSvg(rawSvg, elements, options);
           if (inSequence) {
+            // ToDo: Changes options.startMs inside Promise.all (race condition risk)
             options.startMs = result.finishedMs;
           }
-          return { svg, finishedMs: result.finishedMs };
+          // 2. Create Viewer SVG with dark mode adjustments if needed
+          const elementsForViewer =
+            theme === 'dark'
+              ? elements.map((el) => ({
+                  ...el,
+                  strokeColor: toLightColorIfBlack(el.strokeColor),
+                  backgroundColor: toLightColorIfBlack(el.backgroundColor),
+                }))
+              : elements;
+          const viewerSvg = await exportToSvg({
+            elements: elementsForViewer,
+            files: data.files,
+            appState: { ...data.appState, exportBackground: false },
+            exportPadding: 30,
+          });
+          const resultViewerSvg = animateSvg(viewerSvg, elements, options);
+          if (inSequence) {
+            // ToDo: Same issue: changes options.startMs (race condition risk)
+            options.startMs = resultViewerSvg.finishedMs;
+          }
+
+          // Return both viewer and export SVGs
+          return { svg: viewerSvg, rawSvg, finishedMs: result.finishedMs };
         }),
       );
       setLoadedSvgList(svgList);

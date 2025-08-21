@@ -42,7 +42,8 @@ const getCombinedBeginTimeList = (svgList: Props['svgList']) => {
 
 type Props = {
   svgList: {
-    svg: SVGSVGElement;
+    svg: SVGSVGElement;      // For Viewer
+    rawSvg: SVGSVGElement;   // For Export
     finishedMs: number;
   }[];
   loadDataList: (
@@ -188,8 +189,8 @@ const Toolbar = ({ svgList, loadDataList }: Props) => {
     if (!svgList.length) {
       return;
     }
-    svgList.forEach(({ svg }) => {
-      exportToSvgFile(svg);
+    svgList.forEach(({ rawSvg }) => {
+      exportToSvgFile(rawSvg);
     });
   };
 
