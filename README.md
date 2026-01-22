@@ -45,12 +45,12 @@ Supported formats:
 
 Elements without an explicit animation order are treated as Order=0 and animate in their creation order.
 
-### Grouped elements
+### Multi-selected and grouped elements
 
-When you group elements with different Order/Duration values, the input field shows empty with a "Mixed" placeholder. If you leave it empty, the original values are preserved. If you enter a new value, it applies to all selected elements.
+When you select multiple elements (multi-select) with different Order/Duration values, the input field shows empty with a "Mixed" placeholder. If you leave it empty, the original values are preserved. If you enter a new value, it applies to all selected elements.
 
 - Individual elements: 500ms default duration each
-- Grouped elements: 5 seconds total, divided among group members
+- Formally grouped elements: 5 seconds total, divided among group members
 - You can override this by setting a custom Duration
 
 ### Edit mode and Animate mode maintain separate data
